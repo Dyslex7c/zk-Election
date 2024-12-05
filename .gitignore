@@ -1,0 +1,19 @@
+node_modules/
+
+# build artifcats
+utils/voter_secrets/
+voting_circuit_js/
+*.r1cs
+*.sym
+*.wtns
+*.wasm
+*.zkey
+
+# power of tau files
+*.ptau
+
+# proof and public signal files
+proof.json
+public.json
+
+verification_key.json
