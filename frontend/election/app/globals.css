@@ -1,0 +1,158 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+ 
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+ 
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+ 
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+ 
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+ 
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+ 
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+ 
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+ 
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+ 
+    --radius: 0.5rem;
+  }
+ 
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+ 
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+ 
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+ 
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+ 
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+ 
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+ 
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+ 
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+ 
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+ 
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground transition-colors duration-300;
+  }
+}
+
+/* Custom styles for blockchain theme */
+.text-red-400 {
+  color: #ff6b6b;
+}
+
+.text-blue-400 {
+  color: #4dabf7;
+}
+
+.text-yellow-400 {
+  color: #ffd43b;
+}
+
+.text-green-400 {
+  color: #69db7c;
+}
+
+.text-purple-400 {
+  color: #da77f2;
+}
+
+.text-red-600 {
+  color: #e03131;
+}
+
+.text-blue-600 {
+  color: #1c7ed6;
+}
+
+.text-yellow-600 {
+  color: #f08c00;
+}
+
+.text-green-600 {
+  color: #2f9e44;
+}
+
+.text-purple-600 {
+  color: #ae3ec9;
+}
+
+.bg-red-600 {
+  background-color: #e03131;
+}
+
+.bg-blue-600 {
+  background-color: #1c7ed6;
+}
+
+.bg-yellow-600 {
+  background-color: #f08c00;
+}
+
+.bg-green-600 {
+  background-color: #2f9e44;
+}
+
+.bg-purple-600 {
+  background-color: #ae3ec9;
+}
+
+.hover\:bg-red-700:hover {
+  background-color: #c92a2a;
+}
+
+.hover\:bg-blue-700:hover {
+  background-color: #1864ab;
+}
+
+.hover\:bg-yellow-700:hover {
+  background-color: #e67700;
+}
+
+.hover\:bg-green-700:hover {
+  background-color: #2b8a3e;
+}
+
+.hover\:bg-purple-700:hover {
+  background-color: #9c36b5;
+}
+
