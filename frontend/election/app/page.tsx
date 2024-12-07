@@ -24,6 +24,7 @@ import { Flag, ShieldCheck, Check, X, Sun, Moon } from "lucide-react";
 import VotingService from "@/services/votingService";
 import { ethers } from "ethers";
 import { ExternalProvider } from "@ethersproject/providers";
+import ElectionService from "@/services/electionService";
 
 declare global {
   interface Window {
@@ -32,37 +33,67 @@ declare global {
 }
 
 interface Candidate {
+  id: string;
   name: string;
   party: string;
-  color: string;
+  voteCount: number;
 }
 
-const candidates = [
-  { name: "Vitalik Buterin", party: "Smart Contract Coalition", color: "red" },
-  { name: "Silvio Micali", party: "Zero-Knowledge League", color: "blue" },
-  { name: "Nick Szabo", party: "Consensus Alliance", color: "yellow" },
-  { name: "Whitfield Diffie", party: "Cryptography Crusaders", color: "green" },
-  { name: "Kevin McCoy", party: "NFT Vanguard", color: "purple" },
-];
-
 export default function BlockchainElection() {
+  const [candidates, setCandidates] = useState<Candidate[]>([]);
+
   const [selectedCandidate, setSelectedCandidate] = useState<Candidate | null>(
     null
   );
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [hasVoted, setHasVoted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const votingService = new VotingService(
     provider,
-    "0x4aA194C3fd08957f9396455ec6246Caa424c23BD"
+    "0x3D5eA17D30e3A8A5F87f230036cf63d160ffa62d"
+  );
+  const electionService = new ElectionService(
+    provider,
+    "0x96DF61c39067B32044e733169250cFdeC0778eC3"
   );
 
   useEffect(() => {
     document.body.classList.toggle("dark", isDarkMode);
   }, [isDarkMode]);
+
+  useEffect(() => {
+    fetchCandidates();
+    checkVotingStatus();
+  }, []);
+
+  const fetchCandidates = async () => {
+    setIsLoading(true);
+    try {
+      const fetchedCandidates = await electionService.getCandidates();
+      setCandidates(fetchedCandidates);
+    } catch (error) {
+      console.error("Error fetching candidates:", error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch candidates. Please try again.",
+        variant: "destructive",
+      });
+    }
+    setIsLoading(false);
+  };
+
+  const checkVotingStatus = async () => {
+    try {
+      //const hasUserVoted = await votingService.hasVoted();
+      setHasVoted(false);
+    } catch (error) {
+      console.error("Error checking voting status:", error);
+    }
+  };
 
   const handleVote = (candidate: Candidate) => {
     if (hasVoted) {
@@ -81,15 +112,12 @@ export default function BlockchainElection() {
   const confirmVote = async () => {
     if (!selectedCandidate) return;
 
-    setIsDialogOpen(false);
     setHasVoted(true);
-
     try {
       const voteSubmission = {
         electionId: "123456",
-        candidateId: candidates.findIndex(
-          (c) => c.name === selectedCandidate.name
-        ),
+        candidateId: candidates.find((c) => c.name === selectedCandidate.name)
+          ?.id,
         voterSecret: [
           0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0,
           1, 1, 0, 0, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0,
@@ -106,20 +134,18 @@ export default function BlockchainElection() {
         ],
         nullifierSecret: "7721580882",
       };
-
       console.log(voteSubmission);
-
       const result = await votingService.submitVote(voteSubmission);
-
-      if (result.success) {
+      setIsDialogOpen(false);
+      if (result?.success) {
         toast({
           title: "Vote Confirmed",
-          description: `Your vote for ${selectedCandidate.name} has been recorded on the blockchain.`,
+          description: `Your vote for ${selectedCandidate.name} has been recorded and verified.`,
         });
       } else {
         toast({
           title: "Vote Submission Failed",
-          description: result.error,
+          description: result?.error,
           variant: "destructive",
         });
       }
@@ -137,6 +163,11 @@ export default function BlockchainElection() {
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
+  };
+
+  const getColorForCandidate = (index: number) => {
+    const colors = ["red", "blue", "yellow", "green", "purple"];
+    return colors[index % colors.length];
   };
 
   return (
@@ -192,49 +223,59 @@ export default function BlockchainElection() {
           </p>
         </header>
 
-        <div className="grid gap-6 mb-12">
-          {candidates.map((candidate) => (
-            <Card
-              key={candidate.name}
-              className={`${
-                isDarkMode
-                  ? "bg-gray-800 border-gray-700 hover:bg-gray-700"
-                  : "bg-white border-gray-200 hover:bg-gray-50"
-              } transition-all duration-300 transform hover:scale-105`}
-            >
-              <CardHeader>
-                <CardTitle
-                  className={`text-${candidate.color}-${
-                    isDarkMode ? "400" : "600"
-                  } text-2xl`}
-                >
-                  {candidate.name}
-                </CardTitle>
-                <CardDescription
-                  className={isDarkMode ? "text-gray-400" : "text-gray-600"}
-                >
-                  {candidate.party}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <Button
-                  onClick={() => handleVote(candidate)}
-                  disabled={hasVoted}
-                  className={`w-full bg-${candidate.color}-600 hover:bg-${candidate.color}-700 text-white`}
-                >
-                  {hasVoted ? "Voted" : "Vote"}
-                </Button>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="text-center">
+            <p className="text-xl">Loading candidates...</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 mb-12">
+            {candidates.map((candidate, index) => (
+              <Card
+                key={candidate.id}
+                className={`${
+                  isDarkMode
+                    ? "bg-gray-800 border-gray-700 hover:bg-gray-700"
+                    : "bg-white border-gray-200 hover:bg-gray-50"
+                } transition-all duration-300 transform hover:scale-105`}
+              >
+                <CardHeader>
+                  <CardTitle
+                    className={`text-${getColorForCandidate(index)}-${
+                      isDarkMode ? "400" : "600"
+                    } text-2xl`}
+                  >
+                    {candidate.name}
+                  </CardTitle>
+                  <CardDescription
+                    className={isDarkMode ? "text-gray-400" : "text-gray-600"}
+                  >
+                    {candidate.party}
+                  </CardDescription>
+                </CardHeader>
+                <CardFooter>
+                  <Button
+                    onClick={() => handleVote(candidate)}
+                    disabled={hasVoted}
+                    className={`w-full bg-${getColorForCandidate(
+                      index
+                    )}-600 hover:bg-${getColorForCandidate(
+                      index
+                    )}-700 text-white`}
+                  >
+                    {hasVoted ? "Voted" : "Vote"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
 
         <footer
           className={`text-center ${
             isDarkMode ? "text-gray-400" : "text-gray-600"
           } text-sm`}
         >
-          <p className="mb-4">Powered by Blockchain Technology</p>
+          <p className="mb-4">Powered by zk-SNARKs & Blockchain Technology</p>
         </footer>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

@@ -1,0 +1,115 @@
+{
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "prover",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "internalType": "uint256[2]",
+          "name": "publicSignals",
+          "type": "uint256[2]"
+        },
+        {
+          "indexed": false,
+          "internalType": "bool",
+          "name": "verified",
+          "type": "bool"
+        }
+      ],
+      "name": "ProofVerified",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[2]",
+          "name": "a",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2][2]",
+          "name": "b",
+          "type": "uint256[2][2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "c",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "publicSignals",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "submitProof",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "uint256[2]",
+          "name": "_pA",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2][2]",
+          "name": "_pB",
+          "type": "uint256[2][2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "_pC",
+          "type": "uint256[2]"
+        },
+        {
+          "internalType": "uint256[2]",
+          "name": "_pubSignals",
+          "type": "uint256[2]"
+        }
+      ],
+      "name": "verifyProof",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "devdoc": {
+    "kind": "dev",
+    "methods": {
+      "submitProof(uint256[2],uint256[2][2],uint256[2],uint256[2])": {
+        "params": {
+          "a": "The proof's `a` parameter",
+          "b": "The proof's `b` parameter",
+          "c": "The proof's `c` parameter",
+          "publicSignals": "The public signals corresponding to the proof"
+        }
+      }
+    },
+    "title": "Prove - A contract for zk-SNARK proof verification",
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {
+      "submitProof(uint256[2],uint256[2][2],uint256[2],uint256[2])": {
+        "notice": "Verifies a zk-SNARK proof and emits an event"
+      }
+    },
+    "version": 1
+  }
+}
