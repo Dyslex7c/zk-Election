@@ -18,6 +18,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "ethers": "^5.7.2",
+    "js-cookie": "^3.0.5",
     "lucide-react": "^0.465.0",
     "next": "15.0.3",
     "react": "19.0.0-rc-66855b96-20241106",
@@ -28,6 +29,7 @@
   },
   "devDependencies": {
     "@types/circomlibjs": "^0.1.6",
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

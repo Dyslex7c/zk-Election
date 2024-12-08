@@ -72,6 +72,8 @@ export default function AdminDashboard() {
     endDate: 0,
     isActive: false,
   });
+  console.log(electionConfig);
+  
   const [newCandidate, setNewCandidate] = useState({ name: "", party: "" });
   const [newVoter, setNewVoter] = useState("");
   const { toast } = useToast();
