@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import Cookies from "js-cookie"
-import AdminDashboard from "./dashboard"
-import { Button } from "@/components/ui/button"
-import { toast } from "@/hooks/use-toast"
-import { AlertCircle } from 'lucide-react'
-import Loader from "@/components/Loader/Loader"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import AdminDashboard from "./dashboard";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
+import { AlertCircle } from "lucide-react";
+import Loader from "@/components/Loader/Loader";
 
 const ADMIN_ADDRESSES = process.env.NEXT_PUBLIC_ADMIN_ADDRESS;
 
 export default function AdminPage() {
-  const router = useRouter()
-  const [isAdmin, setIsAdmin] = useState<boolean | null | undefined | "">(null)
+  const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState<boolean | null | undefined | "">(null);
 
   useEffect(() => {
     const walletAddress = Cookies.get("walletAddress");
@@ -25,12 +25,12 @@ export default function AdminPage() {
         title: "Access Denied",
         description: "You do not have permission to access the admin page.",
         variant: "destructive",
-      })
+      });
     }
-  }, [])
+  }, []);
 
   if (isAdmin === null) {
-    return <Loader isAdmin={isAdmin} />
+    return <Loader isAdmin={isAdmin} />;
   }
 
   return isAdmin ? (
@@ -41,9 +41,12 @@ export default function AdminPage() {
         <div className="flex items-center justify-center mb-6 text-red-500">
           <AlertCircle size={48} />
         </div>
-        <h1 className="text-2xl font-bold text-center mb-4">Unauthorized Access</h1>
+        <h1 className="text-2xl font-bold text-center mb-4">
+          Unauthorized Access
+        </h1>
         <p className="text-gray-600 text-center mb-6">
-          Sorry, you do not have permission to access the admin page. If you believe this to be an error, please contact support.
+          Sorry, you do not have permission to access the admin page. If you
+          believe this to be an error, please contact support.
         </p>
         <div className="flex justify-center space-x-4">
           <Button onClick={() => router.push("/")} variant="default">
@@ -55,6 +58,5 @@ export default function AdminPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

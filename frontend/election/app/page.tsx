@@ -55,39 +55,36 @@ export default function BlockchainElection() {
   const { toast } = useToast();
   const { walletAddress, setWalletAddress } = useWallet();
   console.log(walletAddress);
-  
-// Fetch wallet address when the component mounts
-useEffect(() => {
-  const getWalletAddress = async () => {
-    try {
-      // Ensure MetaMask is installed
-      if (window.ethereum) {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const accounts = await provider.send("eth_requestAccounts", []); // Request accounts
-        if (accounts.length > 0) {
-          setWalletAddress(accounts[0]); // Set the first account as the wallet address
-          Cookies.set("walletAddress", accounts[0]);
+
+  useEffect(() => {
+    const getWalletAddress = async () => {
+      try {
+        if (window.ethereum) {
+          const provider = new ethers.providers.Web3Provider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          if (accounts.length > 0) {
+            setWalletAddress(accounts[0]);
+            Cookies.set("walletAddress", accounts[0]);
+          }
+        } else {
+          toast({
+            title: "MetaMask not found",
+            description: "Please install MetaMask to use this application.",
+            variant: "destructive",
+          });
         }
-      } else {
+      } catch (error) {
+        console.error("Error fetching wallet address:", error);
         toast({
-          title: "MetaMask not found",
-          description: "Please install MetaMask to use this application.",
+          title: "Error",
+          description: "Failed to fetch wallet address.",
           variant: "destructive",
         });
       }
-    } catch (error) {
-      console.error("Error fetching wallet address:", error);
-      toast({
-        title: "Error",
-        description: "Failed to fetch wallet address.",
-        variant: "destructive",
-      });
-    }
-  };
+    };
 
-  getWalletAddress();
-}, []);
-
+    getWalletAddress();
+  }, []);
 
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const votingService = new VotingService(
@@ -230,11 +227,15 @@ useEffect(() => {
             )}
           </Button>
           <div>
-    <p className={`text-sm ${isDarkMode ? "text-gray-300" : "text-gray-600"}`}>
-      Connected Wallet:{" "}
-      {walletAddress ? walletAddress : "Not Connected"}
-    </p>
-  </div>
+            <p
+              className={`text-sm ${
+                isDarkMode ? "text-gray-300" : "text-gray-600"
+              }`}
+            >
+              Connected Wallet:{" "}
+              {walletAddress ? walletAddress : "Not Connected"}
+            </p>
+          </div>
           <div className="flex justify-center items-center mb-6">
             <div className="flex justify-center mb-4">
               <Flag
