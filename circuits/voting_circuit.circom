@@ -19,8 +19,11 @@ template VotingCircuit(NUM_CANDIDATES, VOTER_SECRET_BITS) {
     // Outputs
     signal output nullifier;  // Prevents double voting
     signal output commitment; // Allows verification without revealing voter identity
-    
+
     // Candidate validation
+    component candidateBits = Num2Bits(32);
+    candidateBits.in <== candidateId;
+    
     component candidateCheck = LessThan(32);
     candidateCheck.in[0] <== candidateId;
     candidateCheck.in[1] <== NUM_CANDIDATES;
